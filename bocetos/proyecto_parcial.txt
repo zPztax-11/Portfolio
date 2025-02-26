@@ -1,0 +1,104 @@
+class Producto:
+    def __init__(self, nombre, cantidad, precio):
+        self.nombre = nombre
+        self.cantidad = cantidad
+        self.precio = precio
+        self.vendido = 0  # Inicialmente, no se ha vendido nada
+
+class Inventario:
+    def __init__(self):
+        self.productos = []
+
+    def agregar_producto(self, producto):
+        self.productos.append(producto)
+
+    def buscar_producto(self, nombre):
+        for producto in self.productos:
+            if producto.nombre == nombre:
+                return producto
+        return None
+
+    def actualizar_cantidad(self, nombre, nueva_cantidad):
+        producto = self.buscar_producto(nombre)
+        if producto:
+            producto.cantidad = nueva_cantidad
+            print(f"Cantidad actualizada de {nombre} a {nueva_cantidad}.")
+        else:
+            print("Producto no encontrado.")
+
+    def registrar_venta(self, nombre, cantidad):
+        producto = self.buscar_producto(nombre)
+        if producto:
+            if producto.cantidad >= cantidad:
+                producto.cantidad -= cantidad
+                producto.vendido += cantidad
+                print(f"Venta registrada: {cantidad} unidades de {nombre}.")
+            else:
+                print("No hay suficiente stock para realizar la venta.")
+        else:
+            print("Producto no encontrado.")
+
+    def mostrar_inventario(self):
+        if self.productos:
+            print("Inventario:")
+            for producto in self.productos:
+                print(f"Producto: {producto.nombre}, Stock: {producto.cantidad}, Vendido: {producto.vendido}, Precio: {producto.precio}")
+        else:
+            print("El inventario está vacío.")
+
+# Funciones para el menú
+def menu():
+    print("\nMenu:")
+    print("1. Stock")
+    print("2. Buscar Producto")
+    print("3. Estadísticas")
+    print("4. Salir")
+
+def ingresar_stock(inventario):
+    nombre = input("Ingrese el nombre del producto: ")
+    cantidad = int(input("Ingrese la cantidad inicial: "))
+    precio = float(input("Ingrese el precio del producto: "))
+    producto = Producto(nombre, cantidad, precio)
+    inventario.agregar_producto(producto)
+    print("Producto agregado al inventario.")
+
+def menu_stock(inventario):
+    while True:
+        print("\nMenú Stock:")
+        print("1. Ingreso de Producto")
+        print("2. Venta de Producto")
+        print("3. Volver al Menú Principal")
+        opcion = input("Seleccione una opción: ")
+        if opcion == "1":
+            ingresar_stock(inventario)
+        elif opcion == "2":
+            nombre = input("Ingrese el nombre del producto a vender: ")
+            cantidad = int(input("Ingrese la cantidad a vender: "))
+            inventario.registrar_venta(nombre, cantidad)
+        elif opcion == "3":
+            break
+        else:
+            print("Opción no válida. Intente de nuevo.")
+
+# Ejemplo de uso con el menú
+inventario = Inventario()
+
+while True:
+    menu()
+    opcion = input("Seleccione una opción: ")
+    if opcion == "1":
+        menu_stock(inventario)
+    elif opcion == "2":
+        nombre_buscar = input("Ingrese el nombre del producto a buscar: ")
+        producto_encontrado = inventario.buscar_producto(nombre_buscar)
+        if producto_encontrado:
+            print(f"Producto encontrado: {producto_encontrado.nombre}, Stock: {producto_encontrado.cantidad}")
+        else:
+            print("Producto no encontrado.")
+    elif opcion == "3":
+        inventario.mostrar_inventario()
+    elif opcion == "4":
+        print("Saliendo del programa.")
+        break
+    else:
+        print("Opción no válida. Intente de nuevo.")
