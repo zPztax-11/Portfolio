@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproductor de Streams</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        #videoPlayer {
+            width: 100%;
+            height: 500px;
+            background-color: black;
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .controls button, .controls input {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .controls button {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .controls button:hover {
+            background-color: #0056b3;
+        }
+
+        .controls input[type="range"] {
+            width: 200px;
+        }
+
+        .stream-list {
+            margin-top: 20px;
+        }
+
+        .stream-list label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .stream-list select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Reproductor de Streams</h1>
+    <video id="videoPlayer" controls></video>
+
+    <div class="controls">
+        <button id="prevButton">Anterior</button>
+        <input type="range" id="volumeSlider" min="0" max="100" value="70">
+        <button id="nextButton">Siguiente</button>
+    </div>
+
+    <div class="stream-list">
+        <label for="streamSelect">Seleccionar Canal:</label>
+        <select id="streamSelect">
+            <option value="https://telefe.com/Api/Videos/GetSourceUrl/694564/0/HLS?.m3u8=">Telefe</option>
+            <option value="https://drjpy7suzu4c5.cloudfront.net/out/v1/0c06db0274c04e64ab6ae0450f5fbda8/index_6.m3u8">Futbol 01</option>
+            <option value="https://azt-oo.otteravision.com/out/v1/da53d7d388be437e92bf8f464018eb48/index_6.m3u8">Azteca uno</option>
+            <option value="https://live-01-02-eltrece.vodgc.net/eltrecetv/index.m3u8">El Trece</option>
+            <option value="https://stmv1.cnarlatam.com/xtremaanime/xtremaanime/playlist.m3u8">TV Pública</option>
+            <option value="https://stream.arcast.com.ar/atbargentina/atbargentina/playlist.m3u8">ATV ARG HD</option>
+            <option value="https://streaming02.gbasat.com.ar:19360/bayrestv/bayrestv.m3u8">BAYRESTV</option>
+            <option value="http://168.181.122.234:8000/play/a038/index.m3u8">DISNEY CHANNEL</option>
+            <option value="http://cfd-v4-service-channel-stitcher-use1-1.prd.pluto.tv/stitch/hls/channel/5a74b8e1e22a61737979c6bf/master.m3u8?appName=web&appVersion=unknown&clientTime=0&deviceDNT=0&deviceId=6c28f173-30d3-11ef-9cf5-e9ddff8ff496&deviceMake=Chrome&deviceModel=web&deviceType=web&deviceVersion=unknown&includeExtendedEvents=false&serverSideAds=false&sid=46a3b8ff-5a4a-4952-bb4d-9461224acd54">FOXSPORT</option>
+            <option value="http://fl5.moveonjoy.com/AMC_NETWORK/index.m3u8">AMC</option>
+            <option value="http://daleplay.club:80/play/UJYqQ-6bdbTBKzlMCSK0js3edDuHorQuAKLlon4CKsNtwvVDd0yUP93Ip1x5_xGG/ts">ESPN Deportes</option>
+            <option value="http://daleplay.club:80/play/UJYqQ-6bdbTBKzlMCSK0js3edDuHorQuAKLlon4CKsPsiEhUlS1TF1qXugAR5f3E/ts">ESPN 1</option>
+            <option value="http://daleplay.club:80/play/UJYqQ-6bdbTBKzlMCSK0jtLgeD3MLad8E4781DjiTXF6GpkkZHf8xxUcasUCSGaM/ts">ESPN 2</option>
+            <option value="http://daleplay.club:80/play/UJYqQ-6bdbTBKzlMCSK0jtLgeD3MLad8E4781DjiTXH-R5ZefYdIAzUdfaF8Zixj/ts">ESPN 3</option>
+            <option value="http://rhsbjv7k.tvclub.xyz/iptv/YF8M7CWF2TZSDU/30075/index.m3u8">FOX SPORTS</option>
+            <option value="https://live-news-manifest.tubi.video/live-news-manifest/csm/extlive/tubiprd01,Fox-Sports-Espanol2.m3u8">FOX DEPORTES</option>
+            <option value="http://daleplay.club:80/play/UJYqQ-6bdbTBKzlMCSK0jr78-TWIHkIoVRTAeq8QkvPz6fz3zlvdtFME8yi-bwWG/ts">FOX SPORT PREMIUM</option>
+            <option value="http://daleplay.club:80/play/UJYqQ-6bdbTBKzlMCSK0jqxiA-lzsuN24U2f3M6xz-jn5sYK0BNthSk0J2jHcI99/ts">FOX 1</option>
+            <option value="http://daleplay.club:80/play/UJYqQ-6bdbTBKzlMCSK0jn6xCG-BatOD7CLI5hHOqHNzbdQpwM7dcuchcc0vF7WH/ts">FOX 2</option>
+            <option value="http://daleplay.club:80/play/UJYqQ-6bdbTBKzlMCSK0jn6xCG-BatOD7CLI5hHOqHO8L0e1-P70g64RRyYkiIRr/ts">FOX 3</option>
+            <option value="https://ntv1.akamaized.net/hls/live/2014075/NASA-NTV1-HLS/master_2000.m3u8">NASA TV</option>
+            <option value="http://dnslivetv.online:80/live/12581/12581/591707.ts">FOX SPORTS 1 (México)</option>
+            <option value="http://dnslivetv.online:80/live/12581/12581/591710.ts">FOX SPORTS 2 (México)</option>
+            <option value="http://stkip.ddns.me:2082/live/restreamtvplux/Mhsi3wMSJSEjska343255/3092.ts">FOX SPORTS 3 (México)</option>
+            <option value="http://dnslivetv.online:80/live/12581/12581/1069885.ts">FOX SPORTS PREMIUM (México)</option>
+            <option value="http://dnslivetv.online:80/live/12581/12581/591695.ts">ESPN 1 (México)</option>
+            <option value="http://dnslivetv.online:80/live/12581/12581/591698.ts">ESPN 2 (México)</option>
+            <option value="http://dnslivetv.online:80/live/12581/12581/591701.ts">ESPN 3 (México)</option>
+            <option value="http://mstrtv.com:25461/live/nolperto1/2d2f95e23d33501f90f60f0fd30140ea/173357.ts">ESPN 4 (México)</option>
+            <option value="http://mstrtv.com:25461/live/nolperto1/2d2f95e23d33501f90f60f0fd30140ea/50087.ts">ESPN (Argentina)</option>
+            <option value="http://directo.ddns.me:2082/restreamJRX100/dg2wSTvfTfxe/51158">ESPN 2 (Argentina)</option>
+            <option value="http://dnslivetv.online:80/live/12581/12581/1070142.ts">ESPN 3 (Argentina)</option>
+            <option value="http://mstrtv.com:25461/live/nolperto1/2d2f95e23d33501f90f60f0fd30140ea/173358.ts">ESPN PREMIUM (Argentina)</option>
+            <option value="http://directo.ddns.me:2082/restreamJRX100/dg2wSTvfTfxe/3082">FOX SPORTS (Argentina)</option>
+            <option value="http://dnslivetv.online:80/live/12581/12581/1070151.ts">FOX SPORTS 2 (Argentina)</option>
+            <option value="http://directo.ddns.me:2082/restreamJRX100/dg2wSTvfTfxe/76710">FOX SPORTS 3 (Argentina)</option>
+            <option value="https://www.twitch.tv/s1mp50ns">Simpson</option>
+        </select>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+    const videoPlayer = document.getElementById('videoPlayer');
+    const streamSelect = document.getElementById('streamSelect');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
+
+    let streams = Array.from(streamSelect.options).map(option => ({
+        name: option.text,
+        url: option.value
+    }));
+
+    let currentStreamIndex = 0;
+
+    function loadStream(index) {
+        const stream = streams[index];
+        videoPlayer.src = stream.url;
+
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(stream.url);
+            hls.attachMedia(videoPlayer);
+            videoPlayer.play();
+        } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+            videoPlayer.src = stream.url;
+            videoPlayer.addEventListener('loadedmetadata', function() {
+                videoPlayer.play();
+            });
+        }
+    }
+
+    loadStream(currentStreamIndex);
+
+    streamSelect.addEventListener('change', function() {
+        currentStreamIndex = streamSelect.selectedIndex;
+        loadStream(currentStreamIndex);
+    });
+
+    volumeSlider.addEventListener('input', function() {
+        videoPlayer.volume = volumeSlider.value / 100;
+    });
+
+    prevButton.addEventListener('click', function() {
+        currentStreamIndex = (currentStreamIndex - 1 + streams.length) % streams.length;
+        streamSelect.selectedIndex = currentStreamIndex;
+        loadStream(currentStreamIndex);
+    });
+
+    nextButton.addEventListener('click', function() {
+        currentStreamIndex = (currentStreamIndex + 1) % streams.length;
+        streamSelect.selectedIndex = currentStreamIndex;
+        loadStream(currentStreamIndex);
+    });
+</script>
+
+</body>
+</html>

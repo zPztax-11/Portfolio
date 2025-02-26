@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reproductor de Streams</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        #videoPlayer {
+            width: 100%;
+            height: 500px;
+            background-color: black;
+            display: block;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .controls button, .controls input {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .controls button {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .controls input[type="range"] {
+            width: 200px;
+        }
+
+        .stream-list {
+            margin-top: 20px;
+        }
+
+        .stream-list label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .stream-list select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Reproductor de Streams</h1>
+    <video id="videoPlayer" controls></video>
+
+    <div class="controls">
+        <button id="prevButton">Anterior</button>
+        <input type="range" id="volumeSlider" min="0" max="100" value="70">
+        <button id="nextButton">Siguiente</button>
+    </div>
+
+    <div class="stream-list">
+        <label for="streamSelect">Seleccionar Canal:</label>
+        <select id="streamSelect">
+            <option value="https://telefe.com/Api/Videos/GetSourceUrl/694564/0/HLS?.m3u8=">Telefe</option>
+            <option value="https://drjpy7suzu4c5.cloudfront.net/out/v1/0c06db0274c04e64ab6ae0450f5fbda8/index_6.m3u8">Futbol 01</option>
+            <option value="https://azt-oo.otteravision.com/out/v1/da53d7d388be437e92bf8f464018eb48/index_6.m3u8">Azteca Uno</option>
+            <option value="https://live-01-02-eltrece.vodgc.net/eltrecetv/index.m3u8">El Trece</option>
+            <option value="https://ntv1.akamaized.net/hls/live/2014075/NASA-NTV1-HLS/master_2000.m3u8">NASA TV</option>
+        </select>
+    </div>
+</div>
+
+<!-- Incluye hls.js -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<script>
+    // Variables
+    const videoPlayer = document.getElementById('videoPlayer');
+    const streamSelect = document.getElementById('streamSelect');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const prevButton = document.getElementById('prevButton');
+    const nextButton = document.getElementById('nextButton');
+
+    // Lista de streams
+    const streams = [
+        { name: "Telefe", url: "https://telefe.com/Api/Videos/GetSourceUrl/694564/0/HLS?.m3u8=" },
+        { name: "Futbol 01", url: "https://drjpy7suzu4c5.cloudfront.net/out/v1/0c06db0274c04e64ab6ae0450f5fbda8/index_6.m3u8" },
+        { name: "Azteca Uno", url: "https://azt-oo.otteravision.com/out/v1/da53d7d388be437e92bf8f464018eb48/index_6.m3u8" },
+        { name: "El Trece", url: "https://live-01-02-eltrece.vodgc.net/eltrecetv/index.m3u8" },
+        { name: "NASA TV", url: "https://ntv1.akamaized.net/hls/live/2014075/NASA-NTV1-HLS/master_2000.m3u8" }
+    ];
+
+    let currentStreamIndex = 0;
+
+    // Función para cargar y reproducir el stream
+    function loadStream(index) {
+        const stream = streams[index];
+        const videoUrl = stream.url;
+        
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(videoUrl);
+            hls.attachMedia(videoPlayer);
+            hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                videoPlayer.play();
+            });
+        } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+            videoPlayer.src = videoUrl;
+            videoPlayer.play();
+        }
+    }
+
+    // Cargar el primer stream al inicio
+    loadStream(currentStreamIndex);
+
+    // Cambiar canal cuando se selecciona uno diferente en el menú desplegable
+    streamSelect.addEventListener('change', function () {
+        const selectedStreamUrl = streamSelect.value;
+        loadStream(streamSelect.selectedIndex);
+    });
+
+    // Botón Anterior
+    prevButton.addEventListener('click', function () {
+        currentStreamIndex = (currentStreamIndex === 0) ? streams.length - 1 : currentStreamIndex - 1;
+        loadStream(currentStreamIndex);
+    });
+
+    // Botón Siguiente
+    nextButton.addEventListener('click', function () {
+        currentStreamIndex = (currentStreamIndex === streams.length - 1) ? 0 : currentStreamIndex + 1;
+        loadStream(currentStreamIndex);
+    });
+
+    // Controlar el volumen del video
+    volumeSlider.addEventListener('input', function () {
+        videoPlayer.volume = volumeSlider.value / 100;
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Listas HTML</title>
+    <style>
+        body{
+            background-color: #0022;
+            margin: 10px;
+        }
+        h1 {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            border-bottom: 2px solid #78288c;
+            font-size: 26px;
+            color: #FFF;
+        }
+        a{
+            text-decoration: none;
+            font-size: 15px;
+            color: #FFF;
+            border-bottom: 2px solid #78288c;
+            padding: 40px;
+            margin: 40px;
+            padding-bottom: 2px;
+        }
+        li{
+            display: inline;
+            margin-top: 10px;
+            list-style: none;
+        }
+        ul{
+            padding-left: 0px;
+        }
+                /* Fondo en movimiento */
+        .fondo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-image: url('fondo.webp'); /* Cambia a la URL de tu imagen */
+            background-size: 300% 100%; /* Aumenta el tamaño horizontal del fondo */
+            z-index: -1;
+            animation: moverFondo 30s linear infinite;
+        }
+
+        @keyframes moverFondo {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                background-position: 50% 0;
+            }
+        }
+
+        /* Aparición de elementos */
+        .contenido1 {
+            position: relative;
+            color: white;
+            font-size: 1em;
+            text-align: center;
+            top: 0;
+            transform: translateY(10px);
+            animation: aparecer 8s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes aparecer {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fondo"></div> <!-- Fondo en movimiento -->
+<div class="contenido1">
+<h1>KSK</h1>
+<center>
+<ul>
+    <li><a href="index.html#inicio" target="columna_inf">Sobre mí</a></li>
+    <li><a href="index.html#Conocimiento" target="columna_inf">Conocimientos</a></li>
+    <li><a href="index.html#MasDatos" target="columna_inf">Mas datos</a></li>
+    <li><a href="index.html#Autor" target="columna_inf">Autor</a></li>
+</ul>
+</center>
+    </div> 
+</body>
+</html>
